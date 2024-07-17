@@ -43,7 +43,7 @@ class UserListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 class UserRoleUpdateView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def patch(self,request,pk,*args,**kwargs):
         try:
@@ -58,7 +58,7 @@ class UserRoleUpdateView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class UserUpdateView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def patch(self,request,pk,*args,**kwargs):
         try:
