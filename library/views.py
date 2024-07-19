@@ -36,6 +36,15 @@ class LibraryMiddleCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LibraryMiddleCategorySerializer
     permission_classes = [AllowAny]
 
+class LibraryMiddleCategoryByTopCategoryView(generics.ListAPIView):
+    serializer_class = LibraryMiddleCategorySerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        top_category_id = self.kwargs['top_category_id']
+        return LibraryMiddleCategory.objects.filter(top_category_id=top_category_id)
+
+
 
 #SUB CATEGORY VIEWS
 
@@ -52,6 +61,14 @@ class LibrarySubCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LibrarySubCategory.objects.all()
     serializer_class = LibrarySubCategorySerializer
     permission_classes = [AllowAny]
+
+class LibrarySubCategoryByMiddleCategoryView(generics.ListAPIView):
+    serializer_class = LibrarySubCategorySerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        middle_category_id = self.kwargs['middle_category_id']
+        return LibrarySubCategory.objects.filter(middle_category_id=middle_category_id)
 
 
 #LIBRARY DATA VIEWS
