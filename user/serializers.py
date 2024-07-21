@@ -73,7 +73,7 @@ class UserRoleUpdateSerializer(serializers.ModelSerializer):
 class UserSuperRoleUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['is_staff']
+        fields = ['is_superuser','is_staff']
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:

@@ -52,9 +52,11 @@ INSTALLED_APPS = [
     'post',
     'otp_service',
     'testimony',
+    'groups',
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'channels',
 ]
 
 REST_FRAMEWORK = {
@@ -122,7 +124,16 @@ TEMPLATES = [
     },
 ]
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+
 WSGI_APPLICATION = 'hephzibah.wsgi.application'
+ASGI_APPLICATION = 'hephzibah.asgi.application'
+
 
 
 # Database

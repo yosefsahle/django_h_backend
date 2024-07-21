@@ -58,7 +58,7 @@ class UserRoleUpdateView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class UserSuperRoleUpdateView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
     def patch(self,request,pk,*args,**kwargs):
         try:
