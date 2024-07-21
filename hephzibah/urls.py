@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/post/',include('post.urls')),
     path('api/library/',include('library.urls')),
     path('api/consult/',include('consult.urls')),
+    path('api/testimonies/',include('testimony.urls')),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

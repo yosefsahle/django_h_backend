@@ -2,7 +2,7 @@
 from rest_framework import generics
 from .models import LibraryTopCategory, LibraryMiddleCategory, LibrarySubCategory, LibraryData
 from .serializer import LibraryTopCategorySerializer, LibraryMiddleCategorySerializer, LibrarySubCategorySerializer, LibraryDataSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
 
 #TOP CATEGORY VIEWS
 class LibraryTopCategoryListView(generics.ListAPIView):
@@ -82,7 +82,7 @@ class LibraryDataBySubCategoryListView(generics.ListAPIView):
 class LibraryDataListCreateView(generics.ListCreateAPIView):
     queryset = LibraryData.objects.all()
     serializer_class = LibraryDataSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
 class LibraryDataDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = LibraryData.objects.all()

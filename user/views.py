@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny,IsAuthenticated
-from .serializers import UserRegistrationSerializer, UserLoginSerializer,UserSerializer,UserRoleUpdateSerializer,UserUpdateSerializer
+from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
+from .serializers import UserRegistrationSerializer, UserLoginSerializer,UserSerializer,UserRoleUpdateSerializer,UserUpdateSerializer,UserSuperRoleUpdateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
@@ -40,10 +40,10 @@ class UserDetailView(generics.RetrieveAPIView):
 class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
 
 class UserRoleUpdateView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def patch(self,request,pk,*args,**kwargs):
         try:
@@ -52,6 +52,21 @@ class UserRoleUpdateView(APIView):
             raise NotFound("User not Found")
         
         serializer = UserRoleUpdateSerializer(user,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class UserSuperRoleUpdateView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def patch(self,request,pk,*args,**kwargs):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise NotFound("User not Found")
+        
+        serializer = UserSuperRoleUpdateSerializer(user,data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

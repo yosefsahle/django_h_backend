@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import os
 
 class User(AbstractUser):
     ROLE_TYPES = (
@@ -13,14 +14,14 @@ class User(AbstractUser):
     )
     email = models.EmailField(unique=True, null=True, blank=True)
     phone = models.CharField(max_length=15, unique=True)
-    fullname = models.CharField(max_length=255,unique=False)
+    fullname = models.CharField(max_length=255, unique=False)
     church = models.CharField(max_length=255, blank=True, null=True)
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     bio = models.TextField(blank=True, null=True)
-    role = models.CharField(max_length=30,choices=ROLE_TYPES,default='U')
-    username = models.CharField(max_length=50,unique=True)
+    role = models.CharField(max_length=30, choices=ROLE_TYPES, default='U')
+    username = models.CharField(max_length=50, unique=True)
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -39,17 +40,24 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.fullname
-    
-    def save(self,*args,**kwargs):
-        try:
-            old_user = User.objects.get(pk=self.pk)
-        except User.DoesNotExist:
-            old_user=None
 
-        super().save(*args,**kwargs)
+    def save(self, *args, **kwargs):
+        if self.pk:
+            try:
+                old_user = User.objects.get(pk=self.pk)
+                if old_user.profile_image and old_user.profile_image != self.profile_image:
+                    if old_user.profile_image:
+                        if os.path.isfile(old_user.profile_image.path):
+                            os.remove(old_user.profile_image.path)
+            except User.DoesNotExist:
+                pass
+        super().save(*args, **kwargs)
 
-        if old_user and old_user.profile_image and old_user.profile_image != self.profile_image:
-            old_user.profile_image.delete(save=False)
+    def delete(self, *args, **kwargs):
+        if self.profile_image:
+            if os.path.isfile(self.profile_image.path):
+                os.remove(self.profile_image.path)
+        super().delete(*args, **kwargs)
 
 
 class Auth(models.Model):

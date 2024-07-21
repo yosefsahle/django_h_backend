@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'library',
     'post',
     'otp_service',
+    'testimony',
 
     'rest_framework',
     'rest_framework_simplejwt',
